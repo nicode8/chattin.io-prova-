@@ -105,37 +105,31 @@ h1{
 </head>
 <body>
 
-    <div id="container">
+    
+    <form action="destinatario.php" method="POST">
+
+        <div id="container">
             <h1>Destinatario</h1>
             <input type="text" class="input" name="dest" id="dest" placeholder="Inserisci E-mail" size=10>
  
-        <input type="button" name="btn" id="btn" value="Chatta" onClick="destinatario();">
+            <input type="submit" name="btn" id="btn" value="Chatta" >
+        </div>
         
+    </form>
     
-    </div>
+   
 
 <script type="text/javascript">
 
+
+    var button=document.getElementById("btn");
+    btn.addEventListener('click',destinatario);
+    
     function destinatario()
     {
         var utente_destinatario=document.getElementById("dest").value;
-        if(utente_destinatario.length)
-        {
-                fetch("https://xampp/htdocs/chattin.iox/destinatario.php",
-                {method:"post", 
-                headers:{ 'Content-Type': 'application/x-www-form-urlencoded' },
-                body:"dest=" + utente_destinatario
-
-           })
-           .then(response=>{window.location.href="homepage.html"});
-           
-        }
-        else
+        if(!utente_destinatario.length)
             alert("inserisci e-mail valida");
-        
-        
-
-
     }
 
 

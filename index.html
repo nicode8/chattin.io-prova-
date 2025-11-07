@@ -221,12 +221,12 @@ hideShow.addEventListener("click",mostrapass);
 
     }
 
-var sbmt=document.getElementById("sbmt");
-sbmt.addEventListener('click',check);
+var btn=document.getElementById("sbmt");
+btn.addEventListener('click',check);
 
 function check(){
-    var email=document.getElementById("sbmt");
-    var pass_word=document.getElementById("passw");
+    var email=document.getElementById("email").value;
+    var pass_word=document.getElementById("passw").value;
 
     if((email.length==0)||(pass_word.length==0))
         alert("compilare tutti i campi");

@@ -10,7 +10,8 @@ if($conn->connect_error)
 $email=$_POST["email"];
 $password=$_POST["passw"];
 
-
+if(strlen($email))
+{
 $sql="SELECT * FROM accessi WHERE email=? AND passw=? ";
 
 $stmt= $conn->prepare($sql);
@@ -32,16 +33,8 @@ else
 
 $stmt->close();
 $conn->close();
-
-
-
-
-
-
-
-
-
-
-
+}
+else
+    header("location:index.html");
 
 ?>
