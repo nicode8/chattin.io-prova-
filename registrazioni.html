@@ -88,6 +88,17 @@ h1{
     height: 100%;
 }
 
+.passw_response{
+    color:red;
+    margin-top: 1vh;
+    font-size: 2vh;
+    text-align: center;
+}
+
+
+
+
+
 @media screen and (max-width:767px)
 {
     body{
@@ -151,7 +162,7 @@ h1{
             
 
         </div>
-
+        <div class="passw_response"></div>
     </fieldset>
 </form>
 
@@ -187,7 +198,12 @@ h1{
     function sign_up(){
         var testo_password=document.getElementById("passw");
         if(testo_password.value.lenght<8)
+        {
+            var div=document.createElement("div");
+            div.classList.add("passw_response");
+            div.textContent="La password deve essere di almeno 8 caratteri";
             
+        }   
 
 
     }
