@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8088869830901654"
+     crossorigin="anonymous"></script>
+<style>
+body{
+    background-color: rgba(73, 72, 172, 0.329);
+    box-sizing: border-box;
+    overflow-y: hidden;
+    
+}
+#container{
+    height: 100vh;
+    width: 100%;
+    padding-bottom: 2%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    
+    overflow-y: hidden;
+   
+    
+}
+#logout{
+    width:5%;
+}
+#container-message{
+    height: 70%;
+    overflow-y: auto;
+}
+#casella-input{
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-left:20%;
+    padding-right:20%;
+    height: 30%;
+    position: sticky;
+    
+   
+
+}
+#miotesto{
+    background-color: rgb(14, 12, 12);
+    border: 2px solid white;
+    width:100%;
+    height: 30%;
+    border-radius: 15px;
+    color: white;
+    font-size: 120%;
+    padding-left: 2%;
+    
+
+
+}
+#send_img{
+    width: 10%;
+}
+
+#miotesto + #send_img{
+    margin-left:5%;
+}
+
+#container-message-sent{
+    display: flex;
+    flex-direction: column;
+    
+    padding-left:20%;
+    padding-right:20%;
+   
+    
+}
+#d_none1{
+    display: none;
+    
+}
+#d_none2{
+    display: none;
+}
+
+.send_message{
+    margin-left:auto;
+    width:20%;
+    background-color: aliceblue;
+    height: fit-content;
+    padding:2%;
+    font-size:120%;
+    border-radius: 15px;
+    box-shadow: 2px 2px 2px;
+    margin-bottom:2%;
+    
+
+    
+}
+
+#container-message{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left:20%;
+    padding-right:20%;
+   
+    
+}
+.receive_message{
+    
+    width:20%;
+    background-color: aliceblue;
+    height: fit-content;
+    padding:2%;
+    font-size:120%;
+    border-radius: 15px;
+    box-shadow: 2px 2px 2px;
+    margin-bottom:2%;
+}
+@media screen and (max-width: 390px)
+{
+    #casella-input{
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-left:5%;
+    padding-right:5%;
+    height: 10%;
+    position: sticky;
+    width:100%;
+    
+}
+#miotesto{
+    background-color: rgb(14, 12, 12);
+    border: 2px solid white;
+    width:60%;
+    height: 100%;
+    border-radius: 15px;
+    color: white;
+    font-size: 120%;
+    padding-left: 1%;
+    
+
+
+}
+#send_img{
+    width: 30%;
+}
+
+
+}
+</style>
+</head>
+<body>
+    <div id="container">
+        <img id="logout" src="logout.png">
+        <div id="container-message">
+
+                <div id="d_none1"></div>
+                <div id="d_none2"></div>
+
+        </div>
+        <div id="casella-input">
+            <input type="text" name="miotesto" id="miotesto" value="" placeholder="Scrivi qui" size=10 autofocus>
+            <img id="send_img" src="send.png">
+        </div>
+   
+
+
+    </div>
+
+    
+<script type="text/javascript">
+
+    logout.addEventListener('click',function()
+    {
+        window.location.href="index.html";
+    });
+
+
+
+    send_img.addEventListener('click',invia);
+    var last_message=[];
+    function invia()
+    {   
+        var testo=document.getElementById("miotesto");
+        var rett=document.getElementById("d_none1");
+        var message=document.getElementById("container-message");
+        if(rett.style.display=="none")
+            rett.style.display = "block";
+
+        var div=document.createElement("div");
+    
+        div.classList.add("send_message");
+        if(testo.value== "")
+            alert("inserisci un messaggio per inviare");
+        else
+            {   div.textContent= testo.value;
+                document.getElementById("container-message").appendChild(div);
+                 message.scrollTop = message.scrollHeight;
+            }
+
+
+            fetch("https://chattin.io/chat.php", {method:"post", headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: "messaggio=" + testo.value  });
+            setTimeout(() => {
+           
+            }, 0);
+            testo.value= "";
+            testo.focus();
+
+    }
+
+   
+    function ricevi()
+    {   var msg;
+        fetch("https://chattin.io/ricevi.php")
+            .then(response=>response.json())
+            .then(data=>{
+    
+                var rett_r=document.getElementById("d_none2");
+                var message=document.getElementById("container-message");
+                if(rett_r.style.display=="none") 
+                    rett_r.style.display = "block"; 
+
+                data.forEach(msg=>{
+                if(!last_message.includes(msg))
+                {
+                var div=document.createElement("div");
+                    
+                div.classList.add("receive_message");
+                div.textContent= msg;
+                document.getElementById("container-message").appendChild(div);
+                message.scrollTop = message.scrollHeight;
+                last_message.push(msg);
+                }
+                
+                })
+            });
+
+    }
+
+    setInterval(ricevi,2000);
+
+
+    
+
+    
+
+
+
+
+
+</script>
+</body>
+</html>
