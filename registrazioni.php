@@ -6,12 +6,14 @@ $conn= new mysqli($DB_local_host,$DB_local_user,$DB_local_pass,$DB_local_name,$l
 if($conn->connect_error)
     die("errore");
 
+$json=file_get_contents("php://input");
+$dati=json_decode($json,true);
 
 
-$nome=$_POST["nome"];
-$cognome=$_POST["cognome"];
-$_SESSION["email"]=$_POST["email"];
-$password=$_POST["passw"];
+$nome=$dati["nome"];
+$cognome=$dati["cognome"];
+$_SESSION["email"]=$dati["email"];
+$password=$dati["passw"];
 
 
 $sql="INSERT INTO accessi (nome,cognome,email,passw) VALUES (?,?,?,?)";

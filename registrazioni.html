@@ -64,10 +64,23 @@ h1{
     justify-content: center;
     position:relative;
     display: inline-block;
+    padding-bottom:0vh;
+    margin-bottom: -4vh;
 }
 #hideShow{
     width:5vh;
     position: absolute;
+}
+
+.passw_response{
+    
+    color:red;
+    margin-top: 1vh;
+    font-size: 2vh;
+    text-align: center;
+    height:1vh;
+    width:100%;
+    font-size:1.5vh;
 }
 #submitt{
 
@@ -88,12 +101,7 @@ h1{
     height: 100%;
 }
 
-.passw_response{
-    color:red;
-    margin-top: 1vh;
-    font-size: 2vh;
-    text-align: center;
-}
+
 
 
 
@@ -156,13 +164,14 @@ h1{
                 <img src="open_eye.png" id="hideShow">
                    
             </div>
+            
         </div>
         <div id="submitt">
-            <input type="submit" id="sbmt" name="sbmt" value="Registrati">
+            <input type="button" id="sbmt" name="sbmt" value="Registrati">
             
 
         </div>
-        <div class="passw_response"></div>
+        
     </fieldset>
 </form>
 
@@ -193,20 +202,52 @@ h1{
             }
 
     }
+
+
     var btn=document.getElementById("sbmt");
+    var testo_password=document.getElementById("passw");
     btn.addEventListener('click',sign_up);
+   
+    
+
     function sign_up(){
+        var dati={
+        nome:document.getElementById("nome").value,
+        cognome:document.getElementById("cognome").value,
+        email:document.getElementById("email").value,
+        passw:document.getElementById("passw").value,
+        }
         var testo_password=document.getElementById("passw");
-        if(testo_password.value.lenght<8)
-        {
+        if((testo_password.value.length<8))
+        {   
+            if(!document.getElementById("RedMessage"))
+            {
             var div=document.createElement("div");
             div.classList.add("passw_response");
+            div.id="redMessage";
             div.textContent="La password deve essere di almeno 8 caratteri";
+            document.getElementById("container-body").appendChild(div);
+            }
             
+
         }   
-
-
+        else
+        fetch("http://localhost:8080/chattin.iox/registrazioni.php",
+        {
+            method:"POST",
+            headers:{"Content-type":"application/json"},
+            body: JSON.stringify(dati)
+        });
     }
+
+    testo_password.addEventListener('focus',clean_message);
+
+    function clean_message(){
+        var red_message=document.getElementById("redMessage");
+        if(red_message)
+            red_message.remove();
+    }
+    
 
 
 
