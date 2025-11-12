@@ -7,6 +7,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8088869830901654"
      crossorigin="anonymous"></script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VZVJ7VC46R"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VZVJ7VC46R');
+    
+</script>
 <style>
 body{
     background-color: #e0e0e0;
@@ -72,19 +82,20 @@ h1{
     position: absolute;
 }
 
-.passw_response{
+.red_response{
     
     color:red;
-    margin-top: 1vh;
+    margin-top:-1vh;
     font-size: 2vh;
     text-align: center;
     height:1vh;
     width:100%;
-    font-size:1.5vh;
+    font-size:2vh;
+    margin-bottom:1vh;
 }
 #submitt{
 
-    margin-top:6vh;
+    margin-top:10vh;
     width:20vh;
     height: 6vh;
 
@@ -152,13 +163,18 @@ h1{
     <fieldset id="container">
         <h1>Sign Up</h1>
         <div id="container-body">
-            
+            <div>
             <input type="text"  class="input" id="nome" name="nome" value="" placeholder=" Inserisci nome" size="15">
-            
-            <input type="text"  class="input" id="cognome" name="cognome" value="" placeholder=" Inserisci cognome" size="15">
-           
+            </div>
+
+            <div>
+            <input type="text"  class="input" id="username" name="username" value="" placeholder=" Inserisci username" size="15">
+            </div>
+
+            <div>
             <input type="text"  class="input" id="email" name="email" value="" placeholder=" Inserire e-mail" size="15">
-            
+            </div>
+
             <div id="pass_btn">
                 <input type="password" class="input" id="passw" name="passw" value="" placeholder=" Inserire password" size="15">
                 <img src="open_eye.png" id="hideShow">
@@ -181,6 +197,15 @@ h1{
 <script type="text/javascript">
 
     hideShow.addEventListener("click",mostrapass)
+    var btn=document.getElementById("sbmt");
+    var testo_password=document.getElementById("passw");
+    var email=document.getElementById("email");
+    var username=document.getElementById("username");
+    btn.addEventListener('click',sign_up);
+    testo_password.addEventListener('focus',function(){clean_message("redMessage_password");});
+    email.addEventListener('focus',function(){clean_message("redMessage_email");});
+    username.addEventListener('focus',function(){clean_message("redMessage_username");});
+
 
     function mostrapass()
     {   
@@ -204,34 +229,30 @@ h1{
     }
 
 
-    var btn=document.getElementById("sbmt");
-    var testo_password=document.getElementById("passw");
-    btn.addEventListener('click',sign_up);
-   
-    
-
     function sign_up(){
         var dati={
         nome:document.getElementById("nome").value,
-        cognome:document.getElementById("cognome").value,
+        cognome:document.getElementById("username").value,
         email:document.getElementById("email").value,
         passw:document.getElementById("passw").value,
         }
-        var testo_password=document.getElementById("passw");
-        if((testo_password.value.length<8))
-        {   
-            if(!document.getElementById("RedMessage"))
-            {
-            var div=document.createElement("div");
-            div.classList.add("passw_response");
-            div.id="redMessage";
-            div.textContent="La password deve essere di almeno 8 caratteri";
-            document.getElementById("container-body").appendChild(div);
-            }
-            
+        
+        var regex_email= /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        var regex_username= /^[A-Z][^\s@&%$#]+(?=.*[\.!/])$/;
+        if(testo_password.value.length<8)
+            controllo_red_message(passw,"red_response","redMessage_password","Inserire password","La password deve essere almeno di 8 caratteri");
 
-        }   
-        else
+        if(!regex_email.test(email.value))
+            controllo_red_message(email,"red_response","redMessage_email","Inserire email","Inserire email valida");
+        
+        
+        
+        if((!regex_username.test(username.value)))
+            controllo_red_message(username,"red_response","redMessage_username","Inserire username","Inserire username valida");
+
+
+
+
         fetch("http://localhost:8080/chattin.iox/registrazioni.php",
         {
             method:"POST",
@@ -240,17 +261,35 @@ h1{
         });
     }
 
-    testo_password.addEventListener('focus',clean_message);
-
-    function clean_message(){
-        var red_message=document.getElementById("redMessage");
-        if(red_message)
-            red_message.remove();
-    }
     
+    function controllo_red_message(input,class_name,id_name,text_null,text){
+        var id=document.getElementById(id_name);
+        
+        if((!input.value)&&(!id))
+         {   fun_red_message(input,class_name,id_name,text_null);
+            console.log("ciao");
+         }
+        else
+        {   if((input.value)&&(!id))
+                fun_red_message(input,class_name,id_name,text);
+                
+        }
+    }
 
+    function fun_red_message(input,class_name,id_name,text){
+        
+        var item=document.createElement("div");
+        item.classList.add(class_name);
+        item.id=id_name;
+        item.textContent=text;
+        input.parentNode.appendChild(item);
+    }
 
-
+function clean_message(casella){
+    var casella=document.getElementById(casella);
+        if(casella)
+            casella.remove();
+    }
 
 </script>
 </body>
