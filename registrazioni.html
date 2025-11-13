@@ -90,12 +90,12 @@ h1{
     text-align: center;
     height:1vh;
     width:100%;
-    font-size:2vh;
+    font-size:1.5vh;
     margin-bottom:1vh;
 }
 #submitt{
 
-    margin-top:10vh;
+    margin-top:12vh;
     width:20vh;
     height: 6vh;
 
@@ -183,7 +183,7 @@ h1{
             
         </div>
         <div id="submitt">
-            <input type="button" id="sbmt" name="sbmt" value="Registrati">
+            <input type="button" id="sbmt" name="sbmt" value="Registrati" onClick="sign_up();">
             
 
         </div>
@@ -197,15 +197,14 @@ h1{
 <script type="text/javascript">
 
     hideShow.addEventListener("click",mostrapass)
-    var btn=document.getElementById("sbmt");
     var testo_password=document.getElementById("passw");
     var email=document.getElementById("email");
     var username=document.getElementById("username");
-    btn.addEventListener('click',sign_up);
+    var nome=document.getElementById("nome");
     testo_password.addEventListener('focus',function(){clean_message("redMessage_password");});
     email.addEventListener('focus',function(){clean_message("redMessage_email");});
     username.addEventListener('focus',function(){clean_message("redMessage_username");});
-
+    nome.addEventListener('focus',function(){clean_message("redMessage_nome");});
 
     function mostrapass()
     {   
@@ -232,23 +231,38 @@ h1{
     function sign_up(){
         var dati={
         nome:document.getElementById("nome").value,
-        cognome:document.getElementById("username").value,
+        username:document.getElementById("username").value,
         email:document.getElementById("email").value,
         passw:document.getElementById("passw").value,
         }
         
-        var regex_email= /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        var regex_username= /^[A-Z][^\s@&%$#]+(?=.*[\.!/])$/;
-        if(testo_password.value.length<8)
-            controllo_red_message(passw,"red_response","redMessage_password","Inserire password","La password deve essere almeno di 8 caratteri");
+        var regex_email= /^[a-z][a-z0-9\.]+@[^\s@]+\.[a-z]+$/;
+        var regex_password= /^(?=.*[A-Za-z0-9])+(?=.*[!\.()\\/])+[A-Za-z0-9!\.()\\/]+$/;
+        var regex_username= /^[A-Za-z][A-Za-z0-9]+$/;
+        var regex_nome= /^[A-Za-z]+$/;
+
+        if((!regex_nome.test(nome.value))||(nome.value.length<3))
+            controllo_red_message(nome,"red_response","redMessage_nome","Inserire nome","Inserire nome valido");
+
+        if((!regex_username.test(username.value)))
+            controllo_red_message(username,"red_response","redMessage_username","Inserire username","Inserire username valida");    
 
         if(!regex_email.test(email.value))
             controllo_red_message(email,"red_response","redMessage_email","Inserire email","Inserire email valida");
+    
+
+        if(testo_password.value.length<8)
+            controllo_red_message(passw,"red_response","redMessage_password","Inserire password","La password deve:\n\n- avere almeno 8 caratteri\n- contenere almeno un carattere tra: ! . ( ) \ / ");
+
+        if(!regex_password.test(testo_password.value))
+            controllo_red_message(passw,"red_response","redMessage_password","Inserire password","password non accettabile");
+
+
+        
+
         
         
-        
-        if((!regex_username.test(username.value)))
-            controllo_red_message(username,"red_response","redMessage_username","Inserire username","Inserire username valida");
+
 
 
 
@@ -258,7 +272,10 @@ h1{
             method:"POST",
             headers:{"Content-type":"application/json"},
             body: JSON.stringify(dati)
-        });
+        })
+        .then(response=> response.json())
+        .then(errore=> alert(errore));
+
     }
 
     
@@ -282,6 +299,7 @@ h1{
         item.classList.add(class_name);
         item.id=id_name;
         item.textContent=text;
+        item.style.whiteSpace = "pre";
         input.parentNode.appendChild(item);
     }
 

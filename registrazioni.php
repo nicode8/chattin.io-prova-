@@ -11,19 +11,36 @@ $dati=json_decode($json,true);
 
 
 $nome=$dati["nome"];
-$cognome=$dati["cognome"];
+$username=$dati["username"];
 $_SESSION["email"]=$dati["email"];
 $password=$dati["passw"];
 
 
+$sql_check="SELECT * FROM accessi WHERE cognome=? AND email=? AND passw=? ";
+$stmt2= $conn->prepare($sql_check);
+$stmt2->bind_param("sss",$username,$_SESSION["email"],$password);
+
+$stmt2_result= $stmt2->get_result();
+
+if($stmt2_result->num_rows>0)
+{
+    echo json_encode("email gia esistente");
+    exit();
+}
+
+
+
+
 $sql="INSERT INTO accessi (nome,cognome,email,passw) VALUES (?,?,?,?)";
 
+
 $stmt= $conn->prepare($sql);
-$stmt-> bind_param("ssss", $nome, $cognome, $_SESSION["email"], $password);
+$stmt-> bind_param("ssss", $nome, $username, $_SESSION["email"], $password);
 if(!$stmt->execute()) die("Errore: " . $stmt->error);
 
-header("Location: index.html");
-    
+
+
+
 
 
 $stmt->close();
